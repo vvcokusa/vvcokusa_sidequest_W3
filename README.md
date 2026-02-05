@@ -1,12 +1,15 @@
 ## Project Title
 
-GBDA302 Week 3 Example 1: Instructions Screen with Back button
+GBDA302 Week 3
 
 ---
 
 ## Authors
 
-Karen Cochrane and David Han
+Victory Okusanya
+
+Code Orginal:
+Karen and David
 
 ---
 
