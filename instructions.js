@@ -11,11 +11,10 @@
 // drawInstr() is called from main.js
 // only when currentScreen === "instr"
 function drawInstr() {
-  // Light neutral background
-  background(240);
+  background(0, 30, 52);
 
   // ---- Screen title ----
-  fill(0);
+  fill(255);
   textAlign(CENTER, TOP);
   textSize(36);
   text("Instructions", width / 2, 80);

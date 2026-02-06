@@ -1,174 +1,77 @@
-// NOTE: Do NOT add setup() or draw() in this file
-// setup() and draw() live in main.js
-// This file only defines:
-// 1) drawStart() → what the start/menu screen looks like
-// 2) input handlers → what happens on click / key press on this screen
-// 3) a helper function to draw menu buttons
+const scanBtn = {
+  x: 200, // x position (centre of the button)
+  y: 550, // y position (centre of the button)
+  w: 260, // width
+  h: 90, // height
+  label: "Scan Room", // text shown on the button
+};
 
-// ------------------------------------------------------------
-// Start screen visuals
-// ------------------------------------------------------------
-// drawStart() is called from main.js only when:
-// currentScreen === "start"
-function drawStart() {
-  // Background colour for the start screen
-  background(0, 30, 52); // dark forest background
-  fill(0, 20, 10);
-  tree(250, 700, 500);
-  tree(500, 700, 200);
-  tree(800, 700, 1000);
-  tree(0, 700, 800);
-  cabin(width / 2, 775, 100);
+const getoutBtn = {
+  x: 600, // x position (centre of the button)
+  y: 550, // y position (centre of the button)
+  w: 260, // width
+  h: 90, // height
+  label: "Get Out of Bed", // text shown on the button
+};
 
-  // ---- Title text ----
-  fill(255);
-  textSize(46);
+function drawRoom() {
+  // Set background colour for the game screen
+  background(0, 30, 52);
+
+  // ---- Title and instructions text ----
+  fill(255); // white text
+  textSize(32);
   textAlign(CENTER, CENTER);
-  text("Survive the Cabin", width / 2, 180);
+  text("Act 2: The Room", width / 2, 160);
 
-  // ---- Buttons (data only) ----
-  // These objects store the position/size/label for each button.
-  // Using objects makes it easy to pass them into drawButton()
-  // and also reuse the same information for hover checks.
-  const startBtn = {
-    x: width / 2,
-    y: 320,
-    w: 240,
-    h: 80,
-    label: "START",
-  };
+  textSize(18);
+  text(
+    "Your eyes begin to adjust and you notice a figure sitting in a chair in the corner.\nThey aren’t moving.",
+    width / 2,
+    210,
+  );
 
-  const instrBtn = {
-    x: width / 2,
-    y: 430,
-    w: 240,
-    h: 80,
-    label: "INSTRUCTIONS",
-  };
+  drawRoomButton(scanBtn);
+  drawRoomButton(getoutBtn);
 
-  // Draw both buttons
-  drawButton(startBtn);
-  drawButton(instrBtn);
-
-  // ---- Cursor feedback ----
-  // If the mouse is over either button, show a hand cursor
-  // so the player knows it is clickable.
-  const over = isHover(startBtn) || isHover(instrBtn);
-  cursor(over ? HAND : ARROW);
+  cursor(isHover(scanBtn) || isHover(getoutBtn) ? HAND : ARROW);
 }
 
-// ------------------------------------------------------------
-// Mouse input for the start screen
-// ------------------------------------------------------------
-// Called from main.js only when currentScreen === "start"
-function startMousePressed() {
-  // For input checks, we only need x,y,w,h (label is optional)
-  const startBtn = { x: width / 2, y: 320, w: 240, h: 80 };
-  const instrBtn = { x: width / 2, y: 430, w: 240, h: 80 };
-
-  // If START is clicked, go to the game screen
-  if (isHover(startBtn)) {
-    currentScreen = "game";
-  }
-  // If INSTRUCTIONS is clicked, go to the instructions screen
-  else if (isHover(instrBtn)) {
-    currentScreen = "instr";
-  }
-}
-
-// ------------------------------------------------------------
-// Keyboard input for the start screen
-// ------------------------------------------------------------
-// Provides keyboard shortcuts:
-// - ENTER starts the game
-// - I opens instructions
-function startKeyPressed() {
-  if (keyCode === ENTER) {
-    currentScreen = "game";
-  }
-
-  if (key === "i" || key === "I") {
-    currentScreen = "instr";
-  }
-}
-
-// ------------------------------------------------------------
-// Helper: drawButton()
-// ------------------------------------------------------------
-// This function draws a button and changes its appearance on hover.
-// It does NOT decide what happens when you click the button.
-// That logic lives in startMousePressed() above.
-//
-// Keeping drawing separate from input/logic makes code easier to read.
-function drawButton({ x, y, w, h, label }) {
+function drawRoomButton({ x, y, w, h, label }) {
   rectMode(CENTER);
 
-  // Check if the mouse is over the button rectangle
   const hover = isHover({ x, y, w, h });
 
   noStroke();
 
-  // ---- Visual feedback (hover vs not hover) ----
-  // This is a common UI idea:
-  // - normal state is calmer
-  // - hover state is brighter + more “active”
-  //
-  // We also add a shadow using drawingContext (p5 lets you access the
-  // underlying canvas context for effects like shadows).
-  if (hover) {
-    fill(255, 200, 150, 220); // warm coral on hover
+  fill(
+    hover
+      ? color(180, 220, 255, 220) // lighter blue on hover
+      : color(200, 220, 255, 190), // normal state
+  );
 
-    // Shadow settings (only when hovered)
-    drawingContext.shadowBlur = 20;
-    drawingContext.shadowColor = color(255, 180, 120);
-  } else {
-    fill(255, 240, 210, 210); // soft cream base
+  rect(x, y, w, h, 14); // last value = rounded corners
 
-    // Softer shadow when not hovered
-    drawingContext.shadowBlur = 8;
-    drawingContext.shadowColor = color(220, 220, 220);
-  }
-
-  // Draw the rounded rectangle button
-  rect(x, y, w, h, 14);
-
-  // Important: reset shadow so it does not affect other drawings
-  drawingContext.shadowBlur = 0;
-
-  // Draw the label text on top of the button
-  fill(40, 60, 70);
+  fill(0);
   textSize(28);
   textAlign(CENTER, CENTER);
   text(label, x, y);
 }
 
-function tree(x, y, size) {
-  fill(0, 20, 10);
-  triangle(
-    x - size / 4,
-    y + size / 2,
-    x,
-    y - size / 2,
-    x + size / 4,
-    y + size / 2,
-  );
-  rectMode(CENTER);
-  fill(0);
-  rect(x, y + size / 4, size / 10, size / 2);
+function roomMousePressed() {
+  // Only trigger the outcome if the button is clicked
+  if (isHover(scanBtn)) {
+    currentScreen = "escape";
+  } else if (isHover(getoutBtn)) {
+    currentScreen = "lose";
+  }
 }
 
-function cabin(x, y, size) {
-  fill(150, 75, 0);
-  rect(x, y, size, size / 2);
-  fill(100, 50, 0);
-  triangle(
-    x - size / 2,
-    y - size / 4,
-    x,
-    y - size / 2,
-    x + size / 2,
-    y - size / 4,
-  );
-  fill(200, 100, 0);
-  rect(x, y + size / 8, size / 5, size / 4);
+function roomKeyPressed() {
+  // ENTER key triggers the same behaviour as clicking the button
+  if (keyCode === "A") {
+    currentScreen = "escape";
+  } else if (keyCode === "B") {
+    currentScreen = "lose";
+  }
 }

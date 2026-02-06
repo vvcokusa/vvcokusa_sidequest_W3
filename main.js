@@ -50,7 +50,9 @@ function draw() {
 
   if (currentScreen === "start") drawStart();
   else if (currentScreen === "instr") drawInstr();
-  else if (currentScreen === "game") drawGame();
+  else if (currentScreen === "first_act") drawWakeup();
+  else if (currentScreen === "room") drawRoom();
+  else if (currentScreen === "escape") drawEscape();
   else if (currentScreen === "win") drawWin();
   else if (currentScreen === "lose") drawLose();
 
@@ -73,9 +75,11 @@ function mousePressed() {
   // win.js           → winMousePressed()
   // lose.js          → loseMousePressed()
 
-  if (currentScreen === "start") startMousePressed();
-  else if (currentScreen === "instr") instrMousePressed();
-  else if (currentScreen === "game") gameMousePressed();
+  if (currentScreen === "start") startMousePressed?.();
+  else if (currentScreen === "instr") instrMousePressed?.();
+  else if (currentScreen === "first_act") wakeupMousePressed?.();
+  else if (currentScreen === "room") roomMousePressed?.();
+  else if (currentScreen === "escape") escapeMousePressed?.();
   // The ?.() means “call this function only if it exists”
   // This prevents errors if a screen doesn’t implement a handler.
   else if (currentScreen === "win") winMousePressed?.();
@@ -94,9 +98,11 @@ function keyPressed() {
   // win.js           → winKeyPressed()
   // lose.js          → loseKeyPressed()
 
-  if (currentScreen === "start") startKeyPressed();
-  else if (currentScreen === "instr") instrKeyPressed();
-  else if (currentScreen === "game") gameKeyPressed?.();
+  if (currentScreen === "start") startKeyPressed?.();
+  else if (currentScreen === "instr") instrKeyPressed?.();
+  else if (currentScreen === "first_act") wakeupKeyPressed?.();
+  else if (currentScreen === "room") roomKeyPressed?.();
+  else if (currentScreen === "escape") escapeKeyPressed?.();
   else if (currentScreen === "win") winKeyPressed?.();
   else if (currentScreen === "lose") loseKeyPressed?.();
 }
